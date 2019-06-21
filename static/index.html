@@ -1,0 +1,108 @@
+<html style="background-color: darkgrey">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <style>
+        .navbar {
+            background-color: black;
+            color: green;
+            text-align: center;
+        }
+
+        .body {
+            background-color: grey;
+        }
+
+        .header {
+            color: whitesmoke;
+            padding-left: 10px;
+        }
+
+        .split {
+            height: 100%;
+            width: 50%;
+            position: fixed;
+            z-index: 1;
+            top: 30;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .left {
+            left: 0;
+        }
+
+        .right {
+            right: 0;
+            color: white;
+        }
+
+        .metrics {
+            text-align: right;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: auto auto auto auto auto;
+            padding: 10px;
+        }
+
+        .grid-item {
+            padding: 2px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body id="body">
+    <div class="navbar"><span id="title">Queue App</span></div>
+    <div class="grid-container" id="queue"></div>
+    <script>
+
+        function getQueue() {
+            $.get(`/q/view`, (resp) => {
+
+                console.log(resp)
+                var items = JSON.parse(resp)
+                var metricsHTML = ``
+                metricsHTML += `<div class="grid-item">` + "Name" + "</div>";
+                metricsHTML += `<div class="grid-item">` + "Time" + "</div>";
+                metricsHTML += `<div class="grid-item">` + "Course" + "</div>";
+                metricsHTML += `<div class="grid-item">` + "Project" + "</div>";
+                metricsHTML += `<div class="grid-item">` + "Email" + "</div>";
+                for (var i = 0; i < items.length; i++) {
+                    console.log(items[i])
+                    metricsHTML += `<div class="grid-item">` + items[i]["Name"] + "</div>";
+                    // Create a new JavaScript Date object based on the timestamp
+                    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+                    var date = new Date(items[i]["time"] * 1000);
+                    // Hours part from the timestamp
+                    var hours = date.getHours();
+                    // Minutes part from the timestamp
+                    var minutes = "0" + date.getMinutes();
+                    // Seconds part from the timestamp
+                    var seconds = "0" + date.getSeconds();
+
+                    // Will display time in 10:30:23 format
+                    var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+
+                    metricsHTML += `<div class="grid-item">` + formattedTime + "</div>";
+                    metricsHTML += `<div class="grid-item">` + items[i]["Course"] + "</div>";
+                    metricsHTML += `<div class="grid-item">` + items[i]["Project"] + "</div>";
+                    metricsHTML += `<div class="grid-item">` + items[i]["Email"] + "</div>";
+                }
+
+                document.getElementById("queue").innerHTML = metricsHTML;
+            })
+        }
+        getQueue()
+        var interval = setInterval(function () {
+            getQueue()
+        }, 5 * 1000);
+
+    </script>
+    </div>
+</body>
+
+</html>
