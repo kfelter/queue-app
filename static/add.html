@@ -1,0 +1,171 @@
+<html style="background-color: darkgrey">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <style>
+        .navbar {
+            background-color: black;
+            color: green;
+            text-align: center;
+            left: 0;
+        }
+
+        .queue-button {
+            float: left;
+            padding-left: 10px;
+            color: green;
+        }
+
+        .body {
+            background-color: grey;
+        }
+
+        .header {
+            color: whitesmoke;
+            padding-left: 10px;
+        }
+
+        .split {
+            height: 100%;
+            width: 50%;
+            position: fixed;
+            z-index: 1;
+            top: 30;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .left {
+            left: 0;
+        }
+
+        .right {
+            right: 0;
+            color: white;
+        }
+
+        .metrics {
+            text-align: right;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: auto auto auto auto auto;
+            padding: 10px;
+        }
+
+        .grid-item {
+            padding: 2px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body id="body">
+    <div class="navbar"><a class="queue-button" href="/">Back to Queue</a><span id="title">Queue App</span></div>
+    <div class="grid-container" id="form">
+        <div class="grid-item">Name</div>
+        <div class="grid-item">Time</div>
+        <div class="grid-item">Course</div>
+        <div class="grid-item">Project</div>
+        <div class="grid-item">Email</div>
+        <input id="Name" class="grid-item" />
+        <div id="Time" class="grid-item"></div>
+        <input id="Course" class="grid-item" />
+        <input id="Project" class="grid-item" />
+        <input id="Email" class="grid-item" />
+    </div>
+    <button type="button" onclick="enqueue()">Submit</button>
+    <div id="status">Status: <div style="color: red;">Not Submitted</div>
+    </div>
+    <script>
+        function enqueue() {
+            var name = document.getElementById("Name").value
+            var course = document.getElementById("Course").value
+            var project = document.getElementById("Project").value
+            var email = document.getElementById("Email").value
+
+            if (name === '' || name === undefined ||
+                course === '' || course === undefined ||
+                project === '' || project === undefined ||
+                email === '' || email === undefined) {
+                alert('Form Incomplete')
+                return
+            }
+            $.post("/q/enqueue",
+                JSON.stringify({
+                    Name: name,
+                    Course: course,
+                    Project: project,
+                    Email: email
+                }),
+                function (data, status) {
+
+                    if (status === "success") {
+                        document.getElementById('status').innerHTML = 'Status: <div style="color: green;">Submitted</div>'
+                    }
+                    document.getElementById("Name").value = ""
+                    document.getElementById("Course").value = ""
+                    document.getElementById("Project").value = ""
+                    document.getElementById("Email").value = ""
+                });
+        }
+
+        function setTime() {
+            document.getElementById("Time").innerText = toHTime()
+        }
+        setTime()
+        var interval = setInterval(function () {
+            setTime()
+        }, 1 * 1000);
+
+        function toHTime() {
+            // Create a new JavaScript Date object based on the timestamp
+            // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+            var date = new Date();
+            // Hours part from the timestamp
+            var hours = date.getHours();
+            // Minutes part from the timestamp
+            var minutes = "0" + date.getMinutes();
+            // Seconds part from the timestamp
+            var seconds = "0" + date.getSeconds();
+
+            // Will display time in 10:30:23 format
+            var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+            return formattedTime
+        }
+
+            // function getQueue() {
+            //     $.get(`/q/view`, (resp) => {
+
+            //         console.log(resp)
+            //         var items = JSON.parse(resp)
+            //         var metricsHTML = ``
+            //         metricsHTML += `<div class="grid-item">` + "Name" + "</div>";
+            //         metricsHTML += `<div class="grid-item">` + "Time" + "</div>";
+            //         metricsHTML += `<div class="grid-item">` + "Course" + "</div>";
+            //         metricsHTML += `<div class="grid-item">` + "Project" + "</div>";
+            //         metricsHTML += `<div class="grid-item">` + "Email" + "</div>";
+            //         for (var i = 0; i < items.length; i++) {
+            //             console.log(items[i])
+            //             metricsHTML += `<div class="grid-item">` + items[i]["Name"] + "</div>";
+            //             metricsHTML += `<div class="grid-item">` + toHTime(items[i]["time"]) + "</div>";
+            //             metricsHTML += `<div class="grid-item">` + items[i]["Course"] + "</div>";
+            //             metricsHTML += `<div class="grid-item">` + items[i]["Project"] + "</div>";
+            //             metricsHTML += `<div class="grid-item">` + items[i]["Email"] + "</div>";
+            //         }
+
+            //         document.getElementById("queue").innerHTML = metricsHTML;
+            //     })
+            // }
+            // getQueue()
+            // var interval = setInterval(function () {
+            //     getQueue()
+            // }, 5 * 1000);
+
+    </script>
+    </div>
+</body>
+
+</html>

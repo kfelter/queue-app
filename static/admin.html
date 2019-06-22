@@ -10,7 +10,7 @@
             text-align: center;
             left: 0;
         }
-        .add-button {
+        .queue-button {
             color: green;
             padding-left: 10px;
             text-align: left;
@@ -63,10 +63,19 @@
 </head>
 
 <body id="body">
-    <div class="navbar"><a class="add-button" href="/add.html">Join the queue</a><span id="title">Queue App</span><a style="float: right" href="/admin.html">Admin</a></div>
+    <div class="navbar"><a class="queue-button" href="/">Back to Queue</a><span id="title">Queue App</span><button style="float: right;" onclick="getNext()">Get Next</button></div>
     <div class="grid-container" id="queue"></div>
     <script>
 
+        function getNext() {
+            $.get("/q/dequeue", (resp)=>{
+                var item = JSON.parse(resp)
+                alert("Next student to be served\n"+"Name: " + item.Name + 
+                "\nCourse: " + item.Course +
+                "\nProject: " + item.Project +
+                "\nEmail: " + item.Email)
+            })
+        }
         function toHTime(unixTimeStamp) {
             // Create a new JavaScript Date object based on the timestamp
             // multiplied by 1000 so that the argument is in milliseconds, not seconds.
