@@ -1,0 +1,9 @@
+[Service]
+User=root
+Restart=always
+Type=simple
+WorkingDirectory=/home/ubuntu/queue-app
+ExecStart=/home/ubuntu/queue-app/app.linux
+
+[Install]
+WantedBy=multi-user.target
