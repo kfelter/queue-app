@@ -1,0 +1,9 @@
+[Service]
+User=root
+Restart=always
+Type=simple
+WorkingDirectory=/home/ubuntu/queue-app
+ExecStart=/usr/bin/python3 /home/ubuntu/queue-app/populate.py
+
+[Install]
+WantedBy=multi-user.target
