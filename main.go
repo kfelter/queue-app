@@ -9,11 +9,9 @@ import (
 	"time"
 
 	"github.com/felts94/queues"
-	"github.com/felts94/stacks"
 )
 
 var (
-	stack *stacks.Stack
 	queue = queues.NewQueuePointer()
 )
 
@@ -23,8 +21,13 @@ func main() {
 
 func startHTTPServer() {
 	var PORT string
+	var HOST string
 	if PORT = os.Getenv("PORT"); PORT == "" {
 		PORT = "8080"
+	}
+
+	if HOST = os.Getenv("HOST"); HOST == "" {
+		HOST = ""
 	}
 
 	fs := http.FileServer(http.Dir("static"))
@@ -34,26 +37,18 @@ func startHTTPServer() {
 		fmt.Fprintf(w, "ok")
 	})
 
-	// http.HandleFunc("/s/push", pushStack)
-	// http.HandleFunc("/s/pop", popStack)
-	// http.HandleFunc("/s/view", viewStack)
 	http.HandleFunc("/q/enqueue", enqueue)
 	http.HandleFunc("/q/dequeue", dequeue)
 	http.HandleFunc("/q/view", viewQueue)
 
-	log.Printf("Starting Server %s", fmt.Sprintf("%s:%s", "127.0.0.1", PORT))
+	log.Printf("Starting Server %s", fmt.Sprintf("%s:%s", HOST, PORT))
 
-	http.ListenAndServe(fmt.Sprintf("%s:%s", "127.0.0.1", PORT), nil)
+	err := http.ListenAndServe(fmt.Sprintf("%s:%s", HOST, PORT), nil)
+	if err != nil {
+		panic(err)
+	}
 
 }
-
-// func pushStack(w http.ResponseWriter, req *http.Request) {
-
-// }
-
-// func popStack(w http.ResponseWriter, req *http.Request) {
-
-// }
 
 // add someone from the queue
 func enqueue(w http.ResponseWriter, req *http.Request) {
