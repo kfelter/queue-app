@@ -63,7 +63,7 @@
 </head>
 
 <body id="body">
-    <div class="navbar"><a class="add-button" href="/add.html">Join the queue</a><span id="title">Queue App</span><a style="float: right" href="/admin.html">Admin</a></div>
+    <div class="navbar"><a class="add-button" href="/add.html">Join the queue</a><span id="title">Queue App</span><a style="color: green;float: right" href="/admin.html">Admin</a></div>
     <div class="grid-container" id="queue"></div>
     <script>
 
@@ -78,14 +78,17 @@
             // Seconds part from the timestamp
             var seconds = "0" + date.getSeconds();
 
+            var month = date.getMonth() + 1
+            var day = date.getDate()
+
             // Will display time in 10:30:23 format
-            var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+            var formattedTime = month + '/' + day + ' ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
             return formattedTime
         }
         function getQueue() {
             $.get(`/q/view`, (resp) => {
 
-                console.log(resp)
+                // console.log(resp)
                 var items = JSON.parse(resp)
                 var metricsHTML = ``
                 metricsHTML += `<div class="grid-item">` + "Name" + "</div>";
@@ -94,7 +97,7 @@
                 metricsHTML += `<div class="grid-item">` + "Project" + "</div>";
                 metricsHTML += `<div class="grid-item">` + "Email" + "</div>";
                 for (var i = 0; i < items.length; i++) {
-                    console.log(items[i])
+                    // console.log(items[i])
                     metricsHTML += `<div class="grid-item">` + items[i]["Name"] + "</div>";
                     metricsHTML += `<div class="grid-item">` + toHTime(items[i]["time"]) + "</div>";
                     metricsHTML += `<div class="grid-item">` + items[i]["Course"] + "</div>";
