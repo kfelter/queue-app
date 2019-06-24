@@ -94,7 +94,7 @@
         function getQueue() {
             $.get(`/q/view`, (resp) => {
 
-                console.log(resp)
+                // console.log(resp)
                 var items = JSON.parse(resp)
                 var metricsHTML = ``
                 metricsHTML += `<div class="grid-item">` + "Name" + "</div>";
@@ -103,7 +103,7 @@
                 metricsHTML += `<div class="grid-item">` + "Project" + "</div>";
                 metricsHTML += `<div class="grid-item">` + "Email" + "</div>";
                 for (var i = 0; i < items.length; i++) {
-                    console.log(items[i])
+                    // console.log(items[i])
                     metricsHTML += `<div class="grid-item">` + items[i]["Name"] + "</div>";
                     metricsHTML += `<div class="grid-item">` + toHTime(items[i]["time"]) + "</div>";
                     metricsHTML += `<div class="grid-item">` + items[i]["Course"] + "</div>";
